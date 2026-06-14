@@ -7,6 +7,12 @@ const formatDate = (date: string) =>
     month: '2-digit',
     day: '2-digit',
   }).format(new Date(`${date}T00:00:00`));
+
+const publicFileUrl = (fileUrl: string) => {
+  if (!fileUrl || /^https?:\/\//.test(fileUrl)) return fileUrl;
+  const baseUrl = import.meta.env.BASE_URL.endsWith('/') ? import.meta.env.BASE_URL : import.meta.env.BASE_URL + '/';
+  return baseUrl + fileUrl.replace(/^\/+/, '');
+};
 ---
 
 <section class="materials-tool" aria-label="资料筛选工具">
@@ -49,6 +55,7 @@ const formatDate = (date: string) =>
       materials.map((material) => {
         const hasFile = Boolean(material.fileUrl);
         const downloadName = material.fileUrl.split('/').pop() || `${material.id}.pdf`;
+        const resolvedFileUrl = publicFileUrl(material.fileUrl);
 
         return (
           <article
@@ -83,20 +90,20 @@ const formatDate = (date: string) =>
                   <>
                     <a
                       class="material-action"
-                      href={material.fileUrl}
+                      href={resolvedFileUrl}
                       target="_blank"
                       rel="noopener noreferrer"
                       data-material-action="view"
-                      data-file-url={material.fileUrl}
+                      data-file-url={resolvedFileUrl}
                     >
                       在线浏览
                     </a>
                     <a
                       class="material-action material-action--secondary"
-                      href={material.fileUrl}
+                      href={resolvedFileUrl}
                       download={downloadName}
                       data-material-action="download"
-                      data-file-url={material.fileUrl}
+                      data-file-url={resolvedFileUrl}
                     >
                       下载 PDF
                     </a>
