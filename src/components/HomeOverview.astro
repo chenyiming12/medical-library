@@ -1,0 +1,104 @@
+---
+import { materialCategories, materials } from '../data/materials';
+
+const recentMaterials = [...materials]
+  .sort((a, b) => b.updatedAt.localeCompare(a.updatedAt))
+  .slice(0, 4);
+
+const recommendedMaterials = materials.filter((material) =>
+  ['wenbing-review-qna', 'pediatrics-final-framework', 'pcos-mechanism-journal-club'].includes(material.id)
+);
+---
+
+<section class="hero-panel">
+  <div>
+    <p class="hero-label">中西医临床医学个人知识库</p>
+    <h1>把医学学习资料整理成可检索、可复用、可长期积累的知识库。</h1>
+    <p>
+      你好，我是一名中西医临床医学学生。这个网站用于整理我的课程复习资料、文献阅读笔记、组会汇报和医学学习工具，希望把零散知识沉淀成可检索、可复用的个人知识库。
+    </p>
+    <div class="hero-actions">
+      <a href="/library/">进入资料库</a>
+      <a href="/pdf-materials/">查看 PDF 资料</a>
+    </div>
+  </div>
+  <aside class="profile-card" aria-label="个人简介卡片">
+    <span>学习方向</span>
+    <strong>中西医结合 · 临床思维 · 循证阅读</strong>
+    <p>按课程、主题和文献汇报场景沉淀资料，让复习路径更清晰。</p>
+  </aside>
+</section>
+
+<section class="overview-section">
+  <div class="section-heading">
+    <h2>最近更新资料</h2>
+    <a href="/library/">全部资料</a>
+  </div>
+  <div class="compact-list">
+    {
+      recentMaterials.map((material) => (
+        <a href="/library/" class="compact-item">
+          <span>{material.category}</span>
+          <strong>{material.title}</strong>
+          <small>{material.updatedAt}</small>
+        </a>
+      ))
+    }
+  </div>
+</section>
+
+<section class="overview-section">
+  <div class="section-heading">
+    <h2>推荐复习资料</h2>
+    <a href="/pdf-materials/">PDF 入口</a>
+  </div>
+  <div class="feature-grid">
+    {
+      recommendedMaterials.map((material) => (
+        <article class="feature-card">
+          <span>{material.category}</span>
+          <h3>{material.title}</h3>
+          <p>{material.description}</p>
+        </article>
+      ))
+    }
+  </div>
+</section>
+
+<section class="overview-section split-overview">
+  <div>
+    <div class="section-heading">
+      <h2>课程分类入口</h2>
+      <a href="/courses/">分类导航</a>
+    </div>
+    <div class="category-links">
+      {materialCategories.map((category) => <a href="/courses/">{category}</a>)}
+    </div>
+  </div>
+  <div>
+    <div class="section-heading">
+      <h2>文献汇报入口</h2>
+      <a href="/literature-report/">模板页</a>
+    </div>
+    <p class="muted-copy">
+      适合按背景、问题、技术路线、结果图、机制链、局限性和 Q&A 来组织组会材料。
+    </p>
+  </div>
+</section>
+
+<section class="overview-section split-overview">
+  <div>
+    <h2>学习路线或知识库导航</h2>
+    <ol class="route-list">
+      <li>课程复习：先看框架，再看题型和易错点。</li>
+      <li>文献阅读：先抓研究问题，再整理机制链证据。</li>
+      <li>组会汇报：把图、结论、局限和可能提问放在一起复盘。</li>
+    </ol>
+  </div>
+  <div>
+    <h2>关于本站</h2>
+    <p class="muted-copy">
+      当前版本是公开静态资料站 MVP，不包含真正权限控制。后续可以升级为每日密钥、服务端验证和私有对象存储签名 URL。
+    </p>
+  </div>
+</section>

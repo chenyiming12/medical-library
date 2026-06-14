@@ -1,0 +1,6 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64" role="img" aria-label="医学学习资料库">
+  <rect width="64" height="64" rx="12" fill="#0f8f83"/>
+  <path d="M18 18h20a8 8 0 0 1 8 8v20H26a8 8 0 0 1-8-8V18Z" fill="#ffffff" opacity=".94"/>
+  <path d="M32 23v18M23 32h18" stroke="#0f8f83" stroke-width="5" stroke-linecap="round"/>
+  <path d="M42 18h4v28h-4z" fill="#063c44" opacity=".38"/>
+</svg>

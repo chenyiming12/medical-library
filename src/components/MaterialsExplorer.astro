@@ -1,0 +1,200 @@
+---
+import { allTags, materialCategories, materials } from '../data/materials';
+
+const formatDate = (date: string) =>
+  new Intl.DateTimeFormat('zh-CN', {
+    year: 'numeric',
+    month: '2-digit',
+    day: '2-digit',
+  }).format(new Date(`${date}T00:00:00`));
+---
+
+<section class="materials-tool" aria-label="资料筛选工具">
+  <div class="materials-toolbar">
+    <label class="field">
+      <span>搜索标题</span>
+      <input id="materials-search" type="search" placeholder="输入资料标题关键词" autocomplete="off" />
+    </label>
+    <label class="field">
+      <span>课程分类</span>
+      <select id="materials-category">
+        <option value="">全部分类</option>
+        {materialCategories.map((category) => <option value={category}>{category}</option>)}
+      </select>
+    </label>
+    <label class="field">
+      <span>标签</span>
+      <select id="materials-tag">
+        <option value="">全部标签</option>
+        {allTags.map((tag) => <option value={tag}>{tag}</option>)}
+      </select>
+    </label>
+    <label class="field">
+      <span>排序</span>
+      <select id="materials-sort">
+        <option value="newest">更新时间从新到旧</option>
+        <option value="oldest">更新时间从旧到新</option>
+        <option value="title">标题 A-Z</option>
+      </select>
+    </label>
+  </div>
+
+  <div class="materials-meta">
+    <span id="materials-count">共 {materials.length} 份资料</span>
+    <span>PDF 放入 <code>public/files/</code> 后即可接入</span>
+  </div>
+
+  <div id="materials-list" class="materials-grid">
+    {
+      materials.map((material) => {
+        const hasFile = Boolean(material.fileUrl);
+        const downloadName = material.fileUrl.split('/').pop() || `${material.id}.pdf`;
+
+        return (
+          <article
+            class="material-card"
+            data-title={material.title}
+            data-category={material.category}
+            data-tags={material.tags.join(',')}
+            data-updated={material.updatedAt}
+          >
+            <div class="material-card__topline">
+              <span class="category-chip">{material.category}</span>
+              <span class="file-chip">{material.fileType}</span>
+            </div>
+            <h2>{material.title}</h2>
+            <p>{material.description}</p>
+            <dl class="material-card__meta">
+              <div>
+                <dt>更新时间</dt>
+                <dd>{formatDate(material.updatedAt)}</dd>
+              </div>
+              <div>
+                <dt>文件类型</dt>
+                <dd>{material.fileType}</dd>
+              </div>
+            </dl>
+            <div class="tag-list" aria-label="资料标签">
+              {material.tags.map((tag) => <span>{tag}</span>)}
+            </div>
+            <div class="material-actions">
+              {
+                hasFile ? (
+                  <>
+                    <a
+                      class="material-action"
+                      href={material.fileUrl}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      data-material-action="view"
+                      data-file-url={material.fileUrl}
+                    >
+                      在线浏览
+                    </a>
+                    <a
+                      class="material-action material-action--secondary"
+                      href={material.fileUrl}
+                      download={downloadName}
+                      data-material-action="download"
+                      data-file-url={material.fileUrl}
+                    >
+                      下载 PDF
+                    </a>
+                  </>
+                ) : (
+                  <span class="material-action material-action--disabled">暂未上传</span>
+                )
+              }
+            </div>
+          </article>
+        );
+      })
+    }
+  </div>
+
+  <p id="materials-empty" class="materials-empty" hidden>没有找到匹配的资料。</p>
+</section>
+
+<script>
+  const searchInput = document.querySelector<HTMLInputElement>('#materials-search');
+  const categorySelect = document.querySelector<HTMLSelectElement>('#materials-category');
+  const tagSelect = document.querySelector<HTMLSelectElement>('#materials-tag');
+  const sortSelect = document.querySelector<HTMLSelectElement>('#materials-sort');
+  const list = document.querySelector<HTMLElement>('#materials-list');
+  const count = document.querySelector<HTMLElement>('#materials-count');
+  const empty = document.querySelector<HTMLElement>('#materials-empty');
+
+  const normalize = (value: string) => value.trim().toLowerCase();
+  const getCards = () => Array.from(document.querySelectorAll<HTMLElement>('.material-card'));
+  const getFileName = (fileUrl: string) => fileUrl.split('/').filter(Boolean).pop() || 'material.pdf';
+
+  // Future permission version: replace this public fileUrl flow with fileId, a daily-key modal,
+  // a server request to /api/get-pdf-url, and a short-lived signed URL returned by the backend.
+  function handleViewMaterial(fileUrl: string) {
+    if (!fileUrl) return;
+    window.open(fileUrl, '_blank', 'noopener,noreferrer');
+  }
+
+  function handleDownloadMaterial(fileUrl: string) {
+    if (!fileUrl) return;
+    const link = document.createElement('a');
+    link.href = fileUrl;
+    link.download = getFileName(fileUrl);
+    document.body.appendChild(link);
+    link.click();
+    link.remove();
+  }
+
+  function updateMaterials() {
+    if (!list || !count || !empty) return;
+
+    const query = normalize(searchInput?.value || '');
+    const category = categorySelect?.value || '';
+    const tag = tagSelect?.value || '';
+    const sort = sortSelect?.value || 'newest';
+    const cards = getCards();
+
+    cards.forEach((card) => {
+      const title = normalize(card.dataset.title || '');
+      const cardCategory = card.dataset.category || '';
+      const tags = (card.dataset.tags || '').split(',');
+      const matchesQuery = !query || title.includes(query);
+      const matchesCategory = !category || cardCategory === category;
+      const matchesTag = !tag || tags.includes(tag);
+      card.hidden = !(matchesQuery && matchesCategory && matchesTag);
+    });
+
+    const sorted = cards.sort((a, b) => {
+      if (sort === 'oldest') {
+        return (a.dataset.updated || '').localeCompare(b.dataset.updated || '');
+      }
+      if (sort === 'title') {
+        return (a.dataset.title || '').localeCompare(b.dataset.title || '', 'zh-CN');
+      }
+      return (b.dataset.updated || '').localeCompare(a.dataset.updated || '');
+    });
+
+    sorted.forEach((card) => list.appendChild(card));
+    const visibleCount = cards.filter((card) => !card.hidden).length;
+    count.textContent = `共 ${visibleCount} 份资料`;
+    empty.hidden = visibleCount > 0;
+  }
+
+  document.addEventListener('click', (event) => {
+    const target = event.target as HTMLElement;
+    const action = target.closest<HTMLAnchorElement>('[data-material-action]');
+    if (!action) return;
+
+    event.preventDefault();
+    const fileUrl = action.dataset.fileUrl || '';
+    if (action.dataset.materialAction === 'view') handleViewMaterial(fileUrl);
+    if (action.dataset.materialAction === 'download') handleDownloadMaterial(fileUrl);
+  });
+
+  [searchInput, categorySelect, tagSelect, sortSelect].forEach((control) => {
+    control?.addEventListener('input', updateMaterials);
+    control?.addEventListener('change', updateMaterials);
+  });
+
+  updateMaterials();
+</script>

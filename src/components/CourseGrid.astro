@@ -1,0 +1,31 @@
+---
+import { materialCategories, materials } from '../data/materials';
+
+const courses = materialCategories.map((category) => ({
+  category,
+  count: materials.filter((material) => material.category === category).length,
+  tags: Array.from(
+    new Set(materials.filter((material) => material.category === category).flatMap((material) => material.tags))
+  ).slice(0, 5),
+}));
+---
+
+<section class="course-grid">
+  {
+    courses.map((course) => (
+      <article class="course-card">
+        <span>{course.count} 份资料</span>
+        <h2>{course.category}</h2>
+        <p>
+          {course.count > 0
+            ? '已接入示例资料，可在资料库中继续按标题、标签和更新时间检索。'
+            : '预留分类，后续可在资料数据文件中添加资料记录。'}
+        </p>
+        <div class="tag-list">
+          {course.tags.length > 0 ? course.tags.map((tag) => <span>{tag}</span>) : <span>待补充</span>}
+        </div>
+        <a href="/library/">查看资料库</a>
+      </article>
+    ))
+  }
+</section>
