@@ -1,0 +1,106 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
+  <meta name="theme-color" content="#f7b6cf" />
+  <title>Happy Birthday, 小汪</title>
+  <style>
+    :root{--pink:#ef8fb4;--deep:#c95f8e;--light:#fff4f8;--gold:#f0bf66;--ink:#664453}
+    *{box-sizing:border-box}html{scroll-behavior:smooth}body{margin:0;font-family:-apple-system,BlinkMacSystemFont,"Segoe UI","PingFang SC","Hiragino Sans GB","Microsoft YaHei",sans-serif;color:var(--ink);background:linear-gradient(180deg,#fff8fb 0%,#ffeaf2 48%,#fff9f3 100%);overflow-x:hidden}
+    button{font:inherit}.screen{min-height:100svh;display:flex;align-items:center;justify-content:center;padding:24px;position:relative}.card{width:min(92vw,430px);background:rgba(255,255,255,.82);border:1px solid rgba(255,255,255,.95);border-radius:28px;padding:28px 22px;box-shadow:0 20px 60px rgba(201,95,142,.18);backdrop-filter:blur(12px);text-align:center;position:relative;z-index:2}.cover{position:fixed;inset:0;z-index:30;background:radial-gradient(circle at 50% 20%,#fff 0,#ffe9f2 36%,#f4a9c5 100%);transition:.8s ease}.cover.hide{opacity:0;visibility:hidden;transform:scale(1.04)}h1{font-size:clamp(34px,10vw,52px);margin:10px 0 4px;color:#b94f7c;line-height:1.08}.date{letter-spacing:.28em;font-weight:700;color:#d47a9f}.eyebrow{text-transform:uppercase;letter-spacing:.18em;font-size:12px;color:#d17aa0}.lead{font-size:16px;line-height:1.9;margin:18px 0;color:#765363}.btn{border:0;border-radius:999px;padding:14px 22px;background:linear-gradient(135deg,#ea86ae,#c95889);color:#fff;font-weight:700;box-shadow:0 10px 25px rgba(201,88,137,.28);cursor:pointer;transition:.2s}.btn:active{transform:scale(.96)}.ghost{background:#fff;color:#c95f8e;border:1px solid #f2bfd3;box-shadow:none}.music{position:fixed;right:16px;top:16px;z-index:20;width:44px;height:44px;border-radius:50%;border:0;background:rgba(255,255,255,.88);box-shadow:0 8px 24px rgba(130,72,95,.16);font-size:20px}.float{position:fixed;pointer-events:none;z-index:1;animation:rise linear forwards}.section-title{font-size:28px;margin:8px 0 12px;color:#b85580}.cake{font-size:92px;filter:drop-shadow(0 10px 18px rgba(180,80,120,.18));cursor:pointer;user-select:none;transition:.25s}.cake:active{transform:scale(.94)}.hint{font-size:13px;color:#a47a8c}.wish{max-height:0;overflow:hidden;opacity:0;transition:.7s}.wish.show{max-height:280px;opacity:1;margin-top:14px}.letter{text-align:left;line-height:2;text-indent:2em;font-size:15.5px}.chips{display:grid;grid-template-columns:repeat(2,1fr);gap:10px;margin-top:18px}.chip{padding:15px 8px;border-radius:18px;background:linear-gradient(145deg,#fff,#ffe8f1);border:1px solid #f8d0df;font-weight:700}.fortune{min-height:88px;display:flex;align-items:center;justify-content:center;padding:16px;margin:18px 0;border:1px dashed #dc8faf;border-radius:18px;background:#fff9fb;line-height:1.8;font-weight:700}.balloons{display:flex;justify-content:center;gap:12px;margin:18px 0}.balloon{width:62px;height:78px;border:0;border-radius:50% 50% 46% 46%;font-size:28px;box-shadow:inset -8px -10px 15px rgba(0,0,0,.06);cursor:pointer;position:relative}.balloon:after{content:"";position:absolute;left:50%;top:77px;width:1px;height:34px;background:#b98d9d}.b1{background:#ffc0d6}.b2{background:#ffd99d}.b3{background:#c9c2ff}.pop{animation:pop .28s forwards}.final-en{font-family:Georgia,serif;font-style:italic;color:#b65b83;font-size:22px;line-height:1.5}.footer{font-size:13px;color:#9d7787;margin-top:18px}.confetti{position:fixed;width:8px;height:14px;z-index:40;pointer-events:none;animation:fall 2.8s linear forwards}.spark{position:fixed;width:6px;height:6px;border-radius:50%;pointer-events:none;z-index:25;animation:explode 900ms ease-out forwards}
+    @keyframes rise{from{transform:translateY(110vh) rotate(0);opacity:0}15%{opacity:.8}to{transform:translateY(-20vh) rotate(360deg);opacity:0}}@keyframes pop{to{transform:scale(1.5);opacity:0}}@keyframes fall{to{transform:translateY(110vh) rotate(720deg);opacity:.2}}@keyframes explode{to{transform:translate(var(--x),var(--y)) scale(.2);opacity:0}}
+    @media (prefers-reduced-motion:reduce){*{animation-duration:.01ms!important;transition-duration:.01ms!important;scroll-behavior:auto!important}}
+  </style>
+</head>
+<body>
+  <button class="music" id="musicBtn" aria-label="播放或暂停音乐">♫</button>
+  <section class="screen cover" id="cover">
+    <div class="card">
+      <div class="eyebrow">A little birthday surprise</div>
+      <h1>Happy Birthday<br>小汪</h1>
+      <div class="date">07 · 16</div>
+      <p class="lead">今天的页面，只负责装下一些祝福、好运和小小的惊喜。</p>
+      <button class="btn" id="startBtn">开启今日份祝福</button>
+      <p class="hint">点击后将播放生日快乐纯音乐</p>
+    </div>
+  </section>
+
+  <main>
+    <section class="screen">
+      <div class="card">
+        <div class="eyebrow">Make a wish</div>
+        <h2 class="section-title">先许一个愿吧</h2>
+        <div class="cake" id="cake" role="button" aria-label="点击吹灭蜡烛">🎂</div>
+        <p class="hint">轻点蛋糕，吹灭蜡烛</p>
+        <div class="wish" id="wish"><p class="lead">愿你许下的愿望，都在未来的日子里，一点一点实现。</p></div>
+      </div>
+    </section>
+
+    <section class="screen">
+      <div class="card">
+        <div class="eyebrow">For your new year</div>
+        <h2 class="section-title">写给新一岁的你</h2>
+        <p class="letter">小汪，生日快乐！希望新的一岁，正在努力推进的文章能够顺利接收，每一次修改和等待，最后都能收到让人开心的结果；也希望学习上的付出都有回音，想掌握的内容慢慢变得清晰，想完成的目标一步步靠近。</p>
+        <p class="letter">生活里也愿你少一点忙乱和焦虑，多一点从容、轻松与惊喜。愿平常的日子里有好吃的饭、好睡的觉，有值得期待的小事，也有说走就走的好心情。新的一岁，不必事事完美，只愿你认真生活，也常常开心，被温柔以待，也始终有自己的节奏。</p>
+        <div class="chips"><div class="chip">文章顺利接收</div><div class="chip">学习稳步进展</div><div class="chip">生活轻松自在</div><div class="chip">好运持续加载</div></div>
+      </div>
+    </section>
+
+    <section class="screen">
+      <div class="card">
+        <div class="eyebrow">Birthday fortune</div>
+        <h2 class="section-title">抽一张生日好运签</h2>
+        <div class="fortune" id="fortune">点击按钮，看看新一岁的好运提示</div>
+        <button class="btn" id="fortuneBtn">抽取好运签</button>
+      </div>
+    </section>
+
+    <section class="screen">
+      <div class="card">
+        <div class="eyebrow">Tiny surprises</div>
+        <h2 class="section-title">戳破三个小气球</h2>
+        <p class="hint">每一个里面都藏着一句祝福</p>
+        <div class="balloons">
+          <button class="balloon b1" data-msg="愿努力都有好结果">🎀</button>
+          <button class="balloon b2" data-msg="愿日常总有小惊喜">✨</button>
+          <button class="balloon b3" data-msg="愿你一直自在开心">🌷</button>
+        </div>
+        <div class="fortune" id="balloonMsg">还有三个小惊喜等你发现</div>
+      </div>
+    </section>
+
+    <section class="screen">
+      <div class="card">
+        <div class="eyebrow">One more celebration</div>
+        <h2 class="section-title">最后，放一场烟花</h2>
+        <p class="lead">把今天的祝福，再认真说一次。</p>
+        <button class="btn" id="fireBtn">点亮生日烟花</button>
+        <div id="final" style="display:none;margin-top:24px"><div class="final-en">May all the good things find you.</div><p class="lead">小汪，生日快乐。愿所有美好，都如期而至。</p></div>
+        <p class="footer">07.16 · Just for today</p>
+      </div>
+    </section>
+  </main>
+
+<script>
+  const cover=document.getElementById('cover'),startBtn=document.getElementById('startBtn'),musicBtn=document.getElementById('musicBtn');
+  let audioCtx,timer,playing=false,step=0;
+  const melody=[261.63,261.63,293.66,261.63,349.23,329.63,261.63,261.63,293.66,261.63,392,349.23,261.63,261.63,523.25,440,349.23,329.63,293.66,466.16,466.16,440,349.23,392,349.23];
+  const beats=[.35,.35,.7,.7,.7,1.2,.35,.35,.7,.7,.7,1.2,.35,.35,.7,.7,.7,.7,1.2,.35,.35,.7,.7,.7,1.2];
+  function tone(freq,dur){if(!audioCtx)audioCtx=new (window.AudioContext||window.webkitAudioContext)();const o=audioCtx.createOscillator(),g=audioCtx.createGain();o.type='sine';o.frequency.value=freq;g.gain.setValueAtTime(.0001,audioCtx.currentTime);g.gain.exponentialRampToValueAtTime(.14,audioCtx.currentTime+.03);g.gain.exponentialRampToValueAtTime(.0001,audioCtx.currentTime+dur-.03);o.connect(g).connect(audioCtx.destination);o.start();o.stop(audioCtx.currentTime+dur)}
+  function playNext(){if(!playing)return;tone(melody[step],beats[step]);timer=setTimeout(()=>{step=(step+1)%melody.length;playNext()},beats[step]*820)}
+  function toggleMusic(){playing=!playing;musicBtn.textContent=playing?'❚❚':'♫';if(playing){if(audioCtx?.state==='suspended')audioCtx.resume();playNext()}else clearTimeout(timer)}
+  startBtn.onclick=()=>{cover.classList.add('hide');toggleMusic();confetti();setTimeout(()=>window.scrollTo({top:window.innerHeight,behavior:'smooth'}),500)};
+  musicBtn.onclick=toggleMusic;
+
+  document.getElementById('cake').onclick=()=>{document.getElementById('cake').textContent='🍰';document.getElementById('wish').classList.add('show');confetti(24)};
+  const fortunes=['今天宜：开心、吃蛋糕、接受祝福。','新的一岁，努力会被看见，好消息正在路上。','文章进展顺利，灵感与好运都会准时出现。','你的愿望正在加载，完成度：99%。','愿下一次收到的消息，是期待已久的好结果。','新一岁的关键词：从容、顺利、自由、开心。'];
+  document.getElementById('fortuneBtn').onclick=()=>{const f=document.getElementById('fortune');f.style.opacity=0;setTimeout(()=>{f.textContent=fortunes[Math.floor(Math.random()*fortunes.length)];f.style.opacity=1;confetti(16)},180)};
+  document.querySelectorAll('.balloon').forEach(b=>b.onclick=()=>{if(b.classList.contains('pop'))return;b.classList.add('pop');document.getElementById('balloonMsg').textContent=b.dataset.msg;confetti(10)});
+  function confetti(n=50){for(let i=0;i<n;i++){const e=document.createElement('i');e.className='confetti';e.style.left=Math.random()*100+'vw';e.style.top='-20px';e.style.background=['#ef8fb4','#f0bf66','#c8b7ff','#ffffff'][Math.floor(Math.random()*4)];e.style.animationDelay=Math.random()*.6+'s';document.body.appendChild(e);setTimeout(()=>e.remove(),3600)}}
+  function burst(x,y){for(let i=0;i<34;i++){const s=document.createElement('i'),a=Math.PI*2*i/34,d=70+Math.random()*120;s.className='spark';s.style.left=x+'px';s.style.top=y+'px';s.style.background=['#ef8fb4','#f0bf66','#fff','#d5b9ff'][i%4];s.style.setProperty('--x',Math.cos(a)*d+'px');s.style.setProperty('--y',Math.sin(a)*d+'px');document.body.appendChild(s);setTimeout(()=>s.remove(),1000)}}
+  document.getElementById('fireBtn').onclick=()=>{document.getElementById('final').style.display='block';for(let i=0;i<8;i++)setTimeout(()=>burst(40+Math.random()*(innerWidth-80),80+Math.random()*innerHeight*.55),i*240);confetti(70)};
+  setInterval(()=>{if(document.hidden)return;const e=document.createElement('span');e.className='float';e.textContent=['♡','✦','·','🌸'][Math.floor(Math.random()*4)];e.style.left=Math.random()*100+'vw';e.style.fontSize=12+Math.random()*18+'px';e.style.animationDuration=6+Math.random()*5+'s';document.body.appendChild(e);setTimeout(()=>e.remove(),12000)},900);
+</script>
+</body>
+</html>
